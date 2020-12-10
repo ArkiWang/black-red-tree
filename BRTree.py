@@ -147,7 +147,10 @@ class BRTree(object):
                     xp.color = 0
                     self.left_rotate(xp)
                     w = xp.right
-                if w.right.color == 1:
+                if w.left.color == 1 and w.right.color == 1:
+                    w.color = 0
+                    x = x.p
+                elif w.right.color == 1:
                     w.left.color = 1
                     w.color = 1
                     self.right_rotate(w)
@@ -164,7 +167,10 @@ class BRTree(object):
                     xp.color = 0
                     self.right_rotate(xp)
                     w = xp.left
-                if w.left.color == 1:
+                if w.left.color == 1 and w.right.color == 1:
+                    w.color = 0
+                    x = x.p
+                elif w.left.color == 1:
                     w.right.color = 1
                     w.color = 1
                     self.left_rotate(w)
