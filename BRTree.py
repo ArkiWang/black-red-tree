@@ -161,11 +161,11 @@ class BRTree(object):
                     w.color = 1
                     self.right_rotate(w)
                     w = x.parent.right
-                    w.color = x.parent.color
-                    x.parent.color = 1
-                    w.right.color = 1
-                    self.left_rotate(x.parent)
-                    x = self.root
+                w.color = x.parent.color
+                x.parent.color = 1
+                w.right.color = 1
+                self.left_rotate(x.parent)
+                x = self.root
             else:
                 w = x.parent.left
                 if w.color == 0:
@@ -181,11 +181,11 @@ class BRTree(object):
                     w.color = 1
                     self.left_rotate(w)
                     w = x.parent.left
-                    w.color = x.parent.color
-                    x.parent.color = 1
-                    w.left.color = 1
-                    self.right_rotate(x.parent)
-                    x = self.root
+                w.color = x.parent.color
+                x.parent.color = 1
+                w.left.color = 1
+                self.right_rotate(x.parent)
+                x = self.root
         if x != None:x.color = 1
 
     def delete(self, x: int):
