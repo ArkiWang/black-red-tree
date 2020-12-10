@@ -129,11 +129,11 @@ class BRTree(object):
                 y.right = z.right
                 yrp = self.get_parent(y.right)
                 yrp = y
-                self.rb_transplant(z, y)
-                y.left = z.left
-                ylp = self.get_parent(y.left)
-                ylp = y
-                y.color = z.color
+            self.rb_transplant(z, y)
+            y.left = z.left
+            ylp = self.get_parent(y.left)
+            ylp = y
+            y.color = z.color
         if y_oc == 1:
             self.rb_delete_fixup(x)
 
