@@ -43,5 +43,7 @@ draw(brt.root)
 brt.delete(7)
 draw(brt.root)
 brt.insert_node(8)
+brt.insert_node(3)
+brt.insert_node(15)
 draw(brt.root)
 

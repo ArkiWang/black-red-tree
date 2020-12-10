@@ -34,15 +34,22 @@ class BRTree(object):
                     y.color = 1
                     zpp.color = 0
                     z = zpp
-            elif zp == zp.right:
-                z = zp
-                self.left_rotate(z)
+                elif zp == zp.right:
+                    z = zp
+                    self.left_rotate(z)
                 zp.color = 1
                 zpp.color = 0
                 self.right_rotate(zpp)
             else:
-                z = zp
-                self.right_rotate(z)
+                y = zpp.left
+                if y != None and y.color == 0:
+                    zp.color = 1
+                    y.color = 1
+                    zpp.color = 0
+                    z = zpp
+                elif zp == zp.left:
+                    z = zp
+                    self.right_rotate(z)
                 zp.color = 1
                 zpp.color = 0
                 self.left_rotate(zpp)
@@ -51,20 +58,41 @@ class BRTree(object):
 
 
     def left_rotate(self, x: TreeNode):
-        p = self.get_parent(x)
         y = x.right
-        yl = y.left
-        p.right = y
+        x.right = y.left
+        if y.left != None:
+            ylp = self.get_parent(y.left)
+            ylp = x
+        yp = self.get_parent(y)
+        xp = self.get_parent(x)
+        yp = xp
+        if xp == None:
+            self.root = y
+        elif x == xp.left:
+            xp.left = y
+        else:
+            xp.right = y
         y.left = x
-        x.right = yl
+        xp = y
+
 
     def right_rotate(self, x:TreeNode):
-        p = self.get_parent(x)
         y = x.left
-        yr = y.right
-        p.left = y
+        x.left = y.right
+        if y.right != None:
+            yrp = self.get_parent(y.right)
+            yrp = x
+        yp = self.get_parent(y)
+        xp = self.get_parent(x)
+        yp = xp
+        if xp == None:
+            self.root = y
+        elif x == xp.right:
+            xp.right = y
+        else:
+            xp.left = y
         y.right = x
-        x.left = yr
+        xp = y
 
     def insert_to(self, x: int) -> TreeNode:
         p = self.root
