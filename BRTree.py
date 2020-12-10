@@ -5,54 +5,61 @@ class BRTree(object):
         self.root = root
 
     #unique tree
-    def insert_node(self, x: int)->None:
+    def insert(self, v: int)->None:
         if self.root == None:
-            self.root = TreeNode(value=x, color=1)
+            self.root = TreeNode(value=v, color=1)
             return
-        p = self.insert_to(x)
-        z = TreeNode(x)
-        if p.color == 1:#black
-            if x < p.value:
-                p.left = z
-            else:
-                p.right = z
-        else:#red
-            if x < p.value:
-                p.left = z
-            else:
-                p.right = z
-            self.insert_fix_up(z)
+        z = TreeNode(v)
+        x = self.root
+        while x != None:
+            y = x
+            if z.value < x.value:
+                x = x.left
+            else:x = x.right
+        z.parent = y
+        if z.value < y.value:
+            y.left = z
+        else:
+            y.right = z
+        if y == None:
+            self.root = z
+        elif z.value < y.value:
+            y.left = z
+        else:
+            y.right = z
+        z.left = None
+        z.right = None
+        z.color = 0
+        self.insert_fix_up(z)
 
     def insert_fix_up(self, z: TreeNode):
-        zp = self.get_parent(z)
-        while  zp!= None and zp.color == 0:#red
-            zpp = self.get_parent(zp)
-            if zp == zpp.left:
-                y = zpp.right
-                if y != None and y.color == 0:
-                    zp.color = 1
+        while  z.parent!= None and z.parent.color == 0:#red
+            if z.parent != None and z.parent == z.parent.parent.left:
+                y = z.parent.parent.right
+                if y.color == 0:
+                    z.parent.color = 1
                     y.color = 1
-                    zpp.color = 0
-                    z = zpp
-                elif zp == zp.right:
-                    z = zp
+                    z.parent.parent.color = 0
+                    z = z.parent.parent
+                elif z == z.parent.right:
+                    z = z.parent
                     self.left_rotate(z)
-                zp.color = 1
-                zpp.color = 0
-                self.right_rotate(zpp)
+                    z.parent.color = 1
+                    z.parent.parent.color = 0
+                    self.right_rotate(z.parent.parent)
             else:
-                y = zpp.left
+                y = z.parent.parent.left
                 if y != None and y.color == 0:
-                    zp.color = 1
+                    z.parent.color = 1
                     y.color = 1
-                    zpp.color = 0
-                    z = zpp
-                elif zp == zp.left:
-                    z = zp
+                    z.parent.parent.color = 0
+                    z = z.parent.parent
+                elif z == z.parent.left:
+                    z = z.parent
                     self.right_rotate(z)
-                zp.color = 1
-                zpp.color = 0
-                self.left_rotate(zpp)
+                    z.parent.color = 1
+                    z.parent.parent.color = 0
+                    self.left_rotate(z.parent.parent)
         self.root.color = 1
 
 
@@ -61,56 +68,33 @@ class BRTree(object):
         y = x.right
         x.right = y.left
         if y.left != None:
-            ylp = self.get_parent(y.left)
-            ylp = x
-        yp = self.get_parent(y)
-        xp = self.get_parent(x)
-        yp = xp
-        if xp == None:
+            y.left.parent = x
+        y.parent = x.parent
+        if x.parent == None:
             self.root = y
-        elif x == xp.left:
-            xp.left = y
+        elif x == x.parent.left:
+            x.parent.left = y
         else:
-            xp.right = y
+            x.parent.right = y
         y.left = x
-        xp = y
+        x.parent = y
 
 
     def right_rotate(self, x:TreeNode):
         y = x.left
         x.left = y.right
         if y.right != None:
-            yrp = self.get_parent(y.right)
-            yrp = x
-        yp = self.get_parent(y)
-        xp = self.get_parent(x)
-        yp = xp
-        if xp == None:
+            y.right.parent = x
+        y.parent = x.parent
+        if x.parent == None:
             self.root = y
-        elif x == xp.right:
-            xp.right = y
+        elif x == x.parent.right:
+            x.parent.right = y
         else:
-            xp.left = y
+            x.parent.left = y
         y.right = x
-        xp = y
+        x.parent = y
 
-    def insert_to(self, x: int) -> TreeNode:
-        p = self.root
-        while p != None:
-            if x < p.value:
-                if p.left == None: return p
-                p = p.left
-            else:
-                if p.right == None: return p
-                p = p.right
-        return p
-
-    def get_parent(self, n: TreeNode) -> TreeNode:
-        p = self.root
-        while p != None and p.left != n and p.right != n:
-            if n.value < p.value:p = p.left
-            else: p = p.right
-        return p
 
     def get_node(self, x: int):
         p = self.root
@@ -120,15 +104,13 @@ class BRTree(object):
         return p
 
     def rb_transplant(self, u: TreeNode, v: TreeNode):
-        up = self.get_parent(u)
-        vp = self.get_parent(v)
-        if up == None:
+        if u.parent == None:
             self.root = v
-        elif u == up.left:
-            up.left = v
+        elif u == u.parent.left:
+            u.parent.left = v
         else:
-            up.right = v
-        vp = up
+            u.parent.right = v
+        v.parent = u.parent
 
     def tree_minimum(self, x: TreeNode):
         while x.left != None:
@@ -148,33 +130,28 @@ class BRTree(object):
             y = self.tree_minimum(z.right)
             y_oc = y.color
             x = y.right
-            xp = self.get_parent(x)
-            yp = self.get_parent(y)
-            if yp == z:
-                xp = y
+            if y.parent == z:
+                x.parent = y
             else:
                 self.rb_transplant(y, y.right)
                 y.right = z.right
-                yrp = self.get_parent(y.right)
-                yrp = y
+                y.right.parent = y
             self.rb_transplant(z, y)
             y.left = z.left
-            ylp = self.get_parent(y.left)
-            ylp = y
+            y.left.parent = y
             y.color = z.color
         if y_oc == 1:
             self.rb_delete_fixup(x)
 
     def rb_delete_fixup(self, x: TreeNode):
         while x != self.root and x.color == 1:
-            xp = self.get_parent(x)
-            if x == xp.left:
-                w = xp.right
+            if x == x.parent.left:
+                w = x.parent.right
                 if w.color == 0:
                     w.color = 1
-                    xp.color = 0
-                    self.left_rotate(xp)
-                    w = xp.right
+                    x.parent.color = 0
+                    self.left_rotate(x.parent)
+                    w = x.parent.right
                 if w.left.color == 1 and w.right.color == 1:
                     w.color = 0
                     x = x.p
@@ -182,19 +159,19 @@ class BRTree(object):
                     w.left.color = 1
                     w.color = 1
                     self.right_rotate(w)
-                    w = xp.right
-                w.color = xp.color
-                xp.color = 1
+                    w = x.parent.right
+                w.color = x.parent.color
+                x.parent.color = 1
                 w.right.color = 1
-                self.left_rotate(xp)
+                self.left_rotate(x.parent)
                 x = self.root
             else:
-                w = xp.left
+                w = x.parent.left
                 if w.color == 0:
                     w.color = 1
-                    xp.color = 0
-                    self.right_rotate(xp)
-                    w = xp.left
+                    x.parent.color = 0
+                    self.right_rotate(x.parent)
+                    w = x.parent.left
                 if w.left.color == 1 and w.right.color == 1:
                     w.color = 0
                     x = x.p
@@ -202,11 +179,11 @@ class BRTree(object):
                     w.right.color = 1
                     w.color = 1
                     self.left_rotate(w)
-                    w = xp.left
-                w.color = xp.color
-                xp.color = 1
+                    w = x.parent.left
+                w.color = x.parent.color
+                x.parent.color = 1
                 w.left.color = 1
-                self.right_rotate(xp)
+                self.right_rotate(x.parent)
                 x = self.root
         x.color = 1
 

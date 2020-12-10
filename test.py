@@ -6,6 +6,7 @@ red_nodes = []
 black_nodes = []
 def create_graph(G, node, pos={}, x=0, y=0, layer=1):
     pos[node.value] = (x, y)
+    print(node.value, node.color, " ", pos)
     if node.color == 0:
         red_nodes.append(node.value)
     else:
@@ -34,16 +35,37 @@ def draw(node):  # 以某个节点为根画图
 
     plt.show()
 
+print("red nodes", red_nodes)
+print("black nodes", black_nodes)
+red_nodes = []
+black_nodes = []
 brt = BRTree()
-brt.insert_node(11)
-brt.insert_node(14)
-brt.insert_node(7)
-brt.insert_node(9)
+brt.insert(11)
+red_nodes = []
+black_nodes = []
 draw(brt.root)
-brt.delete(7)
+brt.insert(14)
+red_nodes = []
+black_nodes = []
 draw(brt.root)
-brt.insert_node(8)
-brt.insert_node(3)
-brt.insert_node(15)
+brt.insert(7)
+red_nodes = []
+black_nodes = []
+draw(brt.root)
+brt.insert(9)
+red_nodes = []
+black_nodes = []
+draw(brt.root)
+brt.insert(8)
+red_nodes = []
+black_nodes = []
+draw(brt.root)
+brt.insert(3)
+red_nodes = []
+black_nodes = []
+draw(brt.root)
+red_nodes = []
+black_nodes = []
+brt.insert(15)
 draw(brt.root)
 
