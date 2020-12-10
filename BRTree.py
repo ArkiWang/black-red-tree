@@ -110,7 +110,8 @@ class BRTree(object):
             u.parent.left = v
         else:
             u.parent.right = v
-        v.parent = u.parent
+        if v != None:
+            v.parent = u.parent
 
     def tree_minimum(self, x: TreeNode):
         while x.left != None:
@@ -130,9 +131,9 @@ class BRTree(object):
             y = self.tree_minimum(z.right)
             y_oc = y.color
             x = y.right
-            if y.parent == z:
+            if x != None and y.parent == z:
                 x.parent = y
-            else:
+            elif y.right != None:
                 self.rb_transplant(y, y.right)
                 y.right = z.right
                 y.right.parent = y
@@ -144,7 +145,7 @@ class BRTree(object):
             self.rb_delete_fixup(x)
 
     def rb_delete_fixup(self, x: TreeNode):
-        while x != self.root and x.color == 1:
+        while x != self.root and x != None and x.color == 1:
             if x == x.parent.left:
                 w = x.parent.right
                 if w.color == 0:
@@ -160,11 +161,11 @@ class BRTree(object):
                     w.color = 1
                     self.right_rotate(w)
                     w = x.parent.right
-                w.color = x.parent.color
-                x.parent.color = 1
-                w.right.color = 1
-                self.left_rotate(x.parent)
-                x = self.root
+                    w.color = x.parent.color
+                    x.parent.color = 1
+                    w.right.color = 1
+                    self.left_rotate(x.parent)
+                    x = self.root
             else:
                 w = x.parent.left
                 if w.color == 0:
@@ -180,12 +181,12 @@ class BRTree(object):
                     w.color = 1
                     self.left_rotate(w)
                     w = x.parent.left
-                w.color = x.parent.color
-                x.parent.color = 1
-                w.left.color = 1
-                self.right_rotate(x.parent)
-                x = self.root
-        x.color = 1
+                    w.color = x.parent.color
+                    x.parent.color = 1
+                    w.left.color = 1
+                    self.right_rotate(x.parent)
+                    x = self.root
+        if x != None:x.color = 1
 
     def delete(self, x: int):
         nx = self.get_node(x)

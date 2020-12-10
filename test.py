@@ -64,8 +64,18 @@ brt.insert(3)
 red_nodes = []
 black_nodes = []
 draw(brt.root)
+brt.insert(15)
 red_nodes = []
 black_nodes = []
-brt.insert(15)
 draw(brt.root)
 
+
+brt.delete(11)
+red_nodes = []
+black_nodes = []
+draw(brt.root)
+
+brt.delete(8)
+red_nodes = []
+black_nodes = []
+draw(brt.root)
